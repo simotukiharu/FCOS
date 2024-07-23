@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 import pathlib
 import config as cf
 import cv2
-import sanbunkatu
+import Rulu_of_thirds
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(DEVICE)
@@ -16,6 +16,8 @@ model_path = sys.argv[1] # モデルのパス
 image_path = sys.argv[2] # 入力画像のパス
 file_name = pathlib.Path(sys.argv[2])
 np.set_printoptions(precision=3, suppress=True) # 指数表現をやめて小数点以下の桁数を指定する
+out_dir = pathlib.Path(sys.argv[3])
+if(not out_dir.exists()): out_dir.mkdir() #フォルダがない時に作る
 
 # フォントの設定
 textsize = 16
@@ -78,13 +80,11 @@ for i in range(len(scores)):
 
     # 顔以外が検出された時に~する
     
-    if prd_cls != 3 - 1 : continue
+    if prd_cls != 1 - 1 : continue
 
     # 矩形の描画とは別
     input_bgr = cv2.cvtColor(input_rgb, cv2.COLOR_RGB2BGR)
-    dst_img = sanbunkatu.sanbunkatu(input_bgr, p0, p1)
+    dst_img = Rulu_of_thirds.ro3(input_bgr, p0, p1)
 
-    cv2.imwrite(f'sanbunkatu_dst/dst_{file_name.name}_{i}_L.png', dst_img[0])
-    cv2.imwrite(f'sanbunkatu_dst/dst_{file_name.name}_{i}_R.png', dst_img[1])
-
-# img.save(f"sanbunkatu_dst/{file_name.stem}_det.png")
+    cv2.imwrite(f'{out_dir}/dst_{file_name.name}_{i}_L.png', dst_img[0])
+    cv2.imwrite(f'{out_dir}/dst_{file_name.name}_{i}_R.png', dst_img[1])
