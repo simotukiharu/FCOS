@@ -9,8 +9,7 @@ import pathlib
 import random
 import cv2
 import config as cf
-import hinomaru 
-
+import center 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(DEVICE)
@@ -18,6 +17,8 @@ model_path = sys.argv[1] # モデルのパス
 image_path = sys.argv[2] # 入力画像のパス
 file_name = pathlib.Path(sys.argv[2])
 np.set_printoptions(precision=3, suppress=True) # 指数表現をやめて小数点以下の桁数を指定する
+out_dir = pathlib.Path(sys.argv[3])
+if(not out_dir.exists()): out_dir.mkdir() #フォルダがない時に作る
 
 # フォントの設定
 textsize = 16
@@ -62,12 +63,12 @@ for i in range(len(scores)):
     x0, y0 = b[0], b[1]
     p0 = (int(x0), int(y0)) #矩形の左上の座標
     p1 = (int(b[2]), int(b[3])) #矩形の右下の座標
+
     # 領域の座標を配列に
     mx0.append(b[0])
     my0.append(b[1])
     mx1.append(b[2])
     my1.append(b[3])
-
 
     w_side = b[2] - x0
     h_side = b[3] - y0
@@ -90,15 +91,13 @@ mean_p0 = (int(np.mean(mx0)), int(np.mean(my0)))
 mean_p1 = (int(np.mean(mx1)), int(np.mean(my1)))
     
 input_bgr = cv2.cvtColor(input_rgb, cv2.COLOR_RGB2BGR)
-dst_img = hinomaru.hinomaru(input_bgr, mean_p0, mean_p1)
+dst_img = center.center(input_bgr, mean_p0, mean_p1)
 
-cv2.imwrite(f'hinomaru_dst/dst_{prd_cls}_{file_name.stem}.png', dst_img)
-
-
+cv2.imwrite(f'{out_dir}/dst_{prd_cls}_{file_name.stem}.png', dst_img)
 
 img.save(f"{file_name.stem}_det.png") #.stemでフォルダ内の処理
 input_rgb = np.array(img)
 input_bgr = cv2.cvtColor(input_rgb, cv2.COLOR_RGB2BGR)
-dst_img = hinomaru.hinomaru(input_bgr, mean_p0, mean_p1)
+dst_img = center.center(input_bgr, mean_p0, mean_p1)
 
-cv2.imwrite(f'hinomaru_dst/dst_{prd_cls}_{file_name.stem}_bbox.png', dst_img)
+cv2.imwrite(f'{out_dir}/dst_{prd_cls}_{file_name.stem}_bbox.png', dst_img)

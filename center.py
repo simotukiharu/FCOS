@@ -3,9 +3,7 @@ import numpy as np
 import random
 import sys
 
-
-
-def hinomaru(map, p0, p1):
+def center(map, p0, p1):
     i_h = map.shape[0] 
     i_w = map.shape[1]
     # print(i_w, i_h)
@@ -21,9 +19,9 @@ def hinomaru(map, p0, p1):
     # 矩形のシェイプ
     w_side = p1[0] - p0[0] #横幅
     h_side = p1[1] - p0[1] #縦幅
+
     # rは倍率
     r = random.uniform(1.5,2)
-    # r = 1.5   # rの範囲は1.5~2でいい気がする
     if w_side / h_side < 16 / 9:
         # 矩形の縦横幅に対するdst_mapの縦横までの距離
         h_dst = int(r * h_side)
@@ -32,20 +30,6 @@ def hinomaru(map, p0, p1):
         w_dst = int(r * w_side)
         h_dst = int((w_dst / 16) * 9)     #30~36行目は検出した矩形が画角よりも見切れないようにするための処理
     print(r)
-    # 横長の矩形でも試す
-
-    # 微妙に大きさを変える
-    # ifelseで比較して長い方が横の辺
-    # 0.８〜1.２の間で値をばらつかせて、辺にかけて横方向の長さをランダムにしたい
-    # a = random.uniform(1920/long_side * 0.5, 1920/long_side * 1.5)
-
-    # ランダムの値をlongsideにかけて構図の横方向の長さを求めてる
-    # 仮の図形(16:9)の縦横の長さ
-    # w_dst = int(long_side * a)
-    # h_dst = int((w_dst / 1920) *1080)
-    # print(w_dst, h_dst)
-
-
 
     # 仮の図形の座標
     # xd0とyd0も(0,0)の座標になる
@@ -61,7 +45,6 @@ def hinomaru(map, p0, p1):
     # 新画像の中にある入力画像の交点座標
     # xc0 = max(0, xd0)
     if 0 <= xd0:
-        # mapと重なる交点座標と、一枚の新しい画像とみなしたときの座標が考えられるから2つ
         xsc0 = xd0 #dst_mapに基づく座標
         xdc0 = 0 #mapに基づく座標
     else:
@@ -96,16 +79,11 @@ def hinomaru(map, p0, p1):
 if __name__ == "__main__":
     map = np.ones((1080, 1920, 3), np.uint8) * 255
 
-
-
     # cv2.imwrite('map.png', map)
 
     p0 = (int(sys.argv[1]), int(sys.argv[2])) #(200, 800)
     p1 = (int(sys.argv[3]), int(sys.argv[4])) #(400,1200)
     cv2.rectangle(map, p0, p1, (0,0,255),3) #矩形の描画
-    dst_map = hinomaru(map, p0, p1)
+    dst_map = center(map, p0, p1)
     # crop_img = rectangle[p0, p1] 
     cv2.imwrite("out_sample1.png", dst_map)
-
-    # img = map * 0.5 + dst_map * 0.5
-    # cv2.imwrite('combine.png', img)

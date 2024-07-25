@@ -3,7 +3,7 @@ import numpy as np
 import random
 import sys
 
-def sanbunkatu(map, p0, p1):
+def ro3(map, p0, p1):
     ih = map.shape[0] 
     iw = map.shape[1]
     # print(iw, ih)
@@ -23,7 +23,6 @@ def sanbunkatu(map, p0, p1):
     r = random.uniform(3,4)
     # r = 5
     if w_side / h_side < 16 / 9:
-        # 矩形の縦横幅に対するdst_mapの縦横までの距離
         h_dst = int(r * h_side)
         w_dst = int((h_dst / 9) * 16)
     else:
@@ -53,7 +52,6 @@ def sanbunkatu(map, p0, p1):
         # 新画像の中にある入力画像の交点座標
         # xc0 = max(0, xd0)
         if 0 <= xd0:
-            # mapと重なる交点座標と、一枚の新しい画像とみなしたときの座標が考えられるから2つ
             xsc0 = xd0 #dst_mapに基づく座標
             xdc0 = 0 #mapに基づく座標
         else:
@@ -95,7 +93,7 @@ if __name__ == "__main__":
     p0 = (int(sys.argv[1]), int(sys.argv[2])) #(200, 800)
     p1 = (int(sys.argv[3]), int(sys.argv[4])) #(400,1200)
     cv2.rectangle(map, p0, p1, (0,0,255),3) #矩形の描画
-    dst_map = sanbunkatu(map, p0, p1)
+    dst_map = ro3(map, p0, p1)
     cv2.imwrite("out_sample1.png", dst_map)
 
 
