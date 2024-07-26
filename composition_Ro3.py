@@ -3,7 +3,7 @@ import numpy as np
 import random
 import sys
 
-def ro3(map, p0, p1): #入力した画像で検出した頭領域が3分割構図の配置になるよう関数化しています
+def ro3(map, p0, p1): #入力画像と頭部領域の座標から3分割構図で上側左右の両画像を出力する
     ih = map.shape[0] 
     iw = map.shape[1]
     # print(iw, ih)

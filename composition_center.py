@@ -3,7 +3,7 @@ import numpy as np
 import random
 import sys
 
-def center(map, p0, p1): #入力した画像で検出した複数の領域の平均を日の丸構図の配置となるよう関数化しています。
+def center(map, p0, p1): #入力画像と検出した複数領域の平均座標から日の丸構図で画像を出力する
     i_h = map.shape[0] 
     i_w = map.shape[1]
     # print(i_w, i_h)
